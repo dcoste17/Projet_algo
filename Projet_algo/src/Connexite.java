@@ -34,14 +34,6 @@ public boolean est_connexe_sans(Node s, Node t, List<Node> interdit){
     return false;
 }
 
-    public int nbChemin(Node s, Node t){
-        int min =Integer.MAX_VALUE;
-        int cp =s.getNeighbors().size();
-        if (cp<min)
-            min=cp;
-        if (s.hasNeighbors())
-        return min;
-    }
 
     @Override
     public void onMessage(Message message) {
@@ -50,14 +42,5 @@ public boolean est_connexe_sans(Node s, Node t, List<Node> interdit){
 
     }
 
-
-/*    if source
-            compter
-
-
-
-
-
-*/
 
 }
