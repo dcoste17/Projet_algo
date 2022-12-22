@@ -1,44 +1,49 @@
 import io.jbotsim.core.*;
+import io.jbotsim.core.event.CommandListener;
 import io.jbotsim.core.event.SelectionListener;
 import io.jbotsim.core.event.StartListener;
 import io.jbotsim.ui.JViewer;
 import io.jbotsim.ui.icons.Icons;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Main implements SelectionListener, StartListener{
+public class Main implements SelectionListener, StartListener, CommandListener {
 
+    public static final String K_CONNEXITE = "k-Connexe?";
+    public static final String FIND_CONNEX = "Find Connexite";
     Topology tp;
     Node sourceNode;
     Node targetNode;
-    List<Node> interdit= new ArrayList<>();
+    Mode mode = new Mode();
+    List<Node> interdit= mode.interdit;
     public Main() {
         tp = new Topology();
-        tp.setTimeUnit(200); // slow down for visualization
+        tp.setTimeUnit(500);
         tp.setDefaultNodeModel(Connexite.class);
         tp.addSelectionListener(this);
         tp.addStartListener(this);
+        tp.addCommand(K_CONNEXITE);
+        tp.addCommand(FIND_CONNEX);
+        tp.addCommandListener(this);
         new JViewer(tp);
         tp.start();
     }
     @Override
     public void onSelection(Node node) {
-        Node selectedNode = (Node) node;
         //la source devient bleu
         if (sourceNode == null) {
-            sourceNode = selectedNode;
+            sourceNode = node;
             sourceNode.setColor(Color.white);
             //la destination devient noir
         } else if (targetNode == null){
-            targetNode = selectedNode;
+            targetNode = node;
             targetNode.setColor(Color.black);
-        } else if (interdit.contains(selectedNode)) {
-            interdit.remove(selectedNode);
-            selectedNode.setIconSize(10);
+        } else if (interdit.contains(node)) {
+            interdit.remove(node);
+            node.setIconSize(Node.DEFAULT_ICON_SIZE);
         } else {
-            interdit.add(selectedNode);
-            selectedNode.setIconSize(16);
+            interdit.add(node);
+            node.setIconSize(16);
         }
     }
 
@@ -59,6 +64,19 @@ public class Main implements SelectionListener, StartListener{
 
     public static void main(String[] args) {
         new Main();
+    }
+
+    @Override
+    public void onCommand(String command) {
+        if (command.equals(K_CONNEXITE)){
+
+            for (Node n: interdit)
+                System.out.println(n.getID());
+        }
+        if (command.equals(FIND_CONNEX)){
+
+        }
+
     }
 }
 
