@@ -4,11 +4,15 @@ import io.jbotsim.core.event.StartListener;
 import io.jbotsim.ui.JViewer;
 import io.jbotsim.ui.icons.Icons;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main implements SelectionListener, StartListener{
 
     Topology tp;
     Node sourceNode;
     Node targetNode;
+    List<Node> interdit= new ArrayList<>();
     public Main() {
         tp = new Topology();
         tp.setTimeUnit(200); // slow down for visualization
@@ -20,19 +24,21 @@ public class Main implements SelectionListener, StartListener{
     }
     @Override
     public void onSelection(Node node) {
-
         Node selectedNode = (Node) node;
-
         //la source devient bleu
         if (sourceNode == null) {
             sourceNode = selectedNode;
             sourceNode.setColor(Color.white);
-
             //la destination devient noir
         } else if (targetNode == null){
             targetNode = selectedNode;
             targetNode.setColor(Color.black);
-
+        } else if (interdit.contains(selectedNode)) {
+            interdit.remove(selectedNode);
+            selectedNode.setIconSize(10);
+        } else {
+            interdit.add(selectedNode);
+            selectedNode.setIconSize(16);
         }
     }
 
