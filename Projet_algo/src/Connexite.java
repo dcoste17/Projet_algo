@@ -1,3 +1,4 @@
+import io.jbotsim.core.Color;
 import io.jbotsim.core.Message;
 import io.jbotsim.core.Node;
 
@@ -7,7 +8,7 @@ import java.util.Stack;
 
 public class Connexite extends Node{
 
-    List<Node> interdit = new ArrayList<>();
+
     List<Node> visited = new ArrayList<>();
 
 
@@ -26,6 +27,7 @@ public boolean est_connexe_sans(Node s, Node t, List<Node> interdit){
                 pile.add(v);
             }
             else if (v==t){
+                setColor(Color.yellow);
                 return true;
             }
         }
@@ -33,6 +35,7 @@ public boolean est_connexe_sans(Node s, Node t, List<Node> interdit){
     }
     return false;
 }
+//public int
 
 
     @Override
