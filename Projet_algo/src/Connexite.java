@@ -58,91 +58,13 @@ public class Connexite extends Node{
         return true;
     }
 
-    /*public Topology elagage(Node s, Node t) {
-        Stack<Node> pile = new Stack<>();
-        Stack<Node> pile_tmp = new Stack<>();
-        Topology graphe_elage = new Topology();
-        pile.add(s);
-        Node tmp;
-        Node noeud_marqué = s;
-        int modif_tour = 0;
-        int noeuds_ajoute = 0;
-        int nb_voisins = 0;
-        int nb_voisins_niv_suivant = 0;
-        int voisins_visités = 0;
-        while (!pile.empty()) {
-            tmp = pile.pop();
-            List<Node> voisins = tmp.getNeighbors();
-            nb_voisins = s.getNeighbors().size();
-            do {
-                if (modif_tour != 0) {
-                    int position = 0;
-                    for (Node v : voisins) {
-                        if (position+1 == nb_voisins && !pile.contains(noeud_marqué)){
-                            position++;
-                            noeud_marqué = v;
-                        }
-                        if (!visited.contains(v) || !pile.contains(v) || v!=t){
-                            pile.add(v);
-                            //pile_tmp.add(v);
-                        }
-                        //si le noeud correspond au noeud de départ, on garde le lien
-                        if (tmp == s) {
-                            Link lien = new Link(tmp, v);
-                            graphe_elage.addNode(v);
-                            graphe_elage.addLink(lien);
-                            modif_tour++;
-                            noeuds_ajoute++;
-                        } else {
-                            //si le noeud voisin correspond au noeud d'arrivée, on garde le lien
-                            if (v == t) {
-                                Link lien = new Link(tmp, v);
-                                graphe_elage.addNode(v);
-                                graphe_elage.addLink(lien);
-                                modif_tour++;
-                                noeuds_ajoute++;
-                                nb_voisins_niv_suivant++;
-                            } else {
-                                //si le noeud voisin n'a pas déjà été visité ET qu'il n'est lié qu'à son
-                                //parent + un autre noeud
-                                if (!visited.contains(v) && v.getNeighbors().size() == 2) {
-                                    //si un voisin du noeud voisin est déjà visité, on n'ajoute pas le noeud
-                                    for (Node v_visited : visited) {
-                                        if (v.hasNeighbor(v_visited)) {
-                                            break;
-                                        }
-                                        Link lien = new Link(tmp, v);
-                                        graphe_elage.addNode(v);
-                                        graphe_elage.addLink(lien);
-                                        modif_tour++;
-                                        noeuds_ajoute++;
-                                        nb_voisins_niv_suivant++;
-                                    }
-
-                                }
-                            }
-                        }
-                    }
-                    visited.add(tmp);
-                } else {
-                    Node choix = voisins.get(0);
-                    Link lien = new Link(tmp, choix);
-                    graphe_elage.addNode(choix);
-                    graphe_elage.addLink(lien);
-                    modif_tour++;
-                    noeuds_ajoute++;
-                }
-            } while (Math.min(nb_voisins, nb_voisins_niv_suivant) != noeuds_ajoute || pile.contains(noeud_marqué));
-        }
-        return graphe_elage;
-    }*/
     public Topology elagage(Node s, Node t) {
         Stack<Node> pile = new Stack<>();
         List<Node> added = new ArrayList<>();
         Topology graphe_elage = new Topology();
         Node candidat = new Node();
         pile.add(s);
-        Node tmp;
+        Node tmp = new Node();
         while (!pile.empty()) {
             List<Node> voisins = tmp.getNeighbors();
             for (Node v : voisins) {
@@ -177,23 +99,24 @@ public class Connexite extends Node{
                         candidat = v;
                     }
                 }
-            }if (candidat != null){
-                added.add(candidat);
-                Link lien = new Link(tmp, v);
-                graphe_elage.addNode(v);
-                graphe_elage.addLink(lien);
-                candidat = null;
+                if (candidat != null){
+                    added.add(candidat);
+                    Link lien = new Link(tmp, v);
+                    graphe_elage.addNode(v);
+                    graphe_elage.addLink(lien);
+                    candidat = null;
+                }
             }
-        }
+        }return graphe_elage;
     }
-    int parcours_p (Node s, Node t, Node tmp){
+    int parcours_p (Node t, Node tmp){
         int cpt = 0;
         List<Node> voisins = tmp.getNeighbors();
         for (Node v : voisins) {
             if (v == t){
                 return 1;
             }
-            cpt = cpt + parcours_p(s, t, v);
+            cpt = cpt + parcours_p(t, v);
         }
         return cpt;
     }
@@ -201,12 +124,12 @@ public class Connexite extends Node{
     int nb_chemin (Node s, Node t) {
         int nb = 0;
         Topology graphe_mod = elagage(s, t);
-        Node tmp = new Node();
         List<Node> noeuds = graphe_mod.getNodes();
         int taille = noeuds.size();
         Node s_mod = noeuds.get(0);
+        Node tmp = s_mod;
         Node t_mod = noeuds.get(taille-1);
-        nb = parcours_p(s_mod, t_mod, tmp);
+        nb = parcours_p(t_mod, tmp);
         return nb;
     }
 
