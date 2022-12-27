@@ -58,7 +58,7 @@ public class Connexite extends Node{
         return true;
     }
 
-    public Topology elagage(Node s, Node t) {
+    /*public Topology elagage(Node s, Node t) {
         Stack<Node> pile = new Stack<>();
         Stack<Node> pile_tmp = new Stack<>();
         Topology graphe_elage = new Topology();
@@ -135,8 +135,80 @@ public class Connexite extends Node{
             } while (Math.min(nb_voisins, nb_voisins_niv_suivant) != noeuds_ajoute || pile.contains(noeud_marqué));
         }
         return graphe_elage;
+    }*/
+    public Topology elagage(Node s, Node t) {
+        Stack<Node> pile = new Stack<>();
+        List<Node> added = new ArrayList<>();
+        Topology graphe_elage = new Topology();
+        Node candidat = new Node();
+        pile.add(s);
+        Node tmp;
+        while (!pile.empty()) {
+            List<Node> voisins = tmp.getNeighbors();
+            for (Node v : voisins) {
+                //si le noeud père correspond au noeud source OU si le noeud voisin correspond au noeud d'arrivée
+                //on garde le lien
+                if(!added.contains(v)) {
+                    if ((tmp == s || v == t)) {
+                        Link lien = new Link(tmp, v);
+                        graphe_elage.addNode(v);
+                        graphe_elage.addLink(lien);
+                        added.add(v);
+                        candidat = null;
+                        break;
+                    }
+                    //si le noeud voisin n'est lié qu'à son
+                    //parent + un autre noeud
+                    if (v.getNeighbors().size() <= 2) {
+                        //si un voisin du noeud voisin est déjà ajouté, on n'ajoute pas le noeud
+                        for(Node neighbor_v : v.getNeighbors()){
+                            //si le noeud voisin du noeud voisin (qui n'est pas le noeud source)
+                            //n'est relié à aucun noeud déjà ajouté, on garde le lien
+                            if(neighbor_v != tmp && !added.contains(neighbor_v)){
+                                Link lien = new Link(tmp, v);
+                                graphe_elage.addNode(v);
+                                graphe_elage.addLink(lien);
+                                added.add(v);
+                                candidat = null;
+                                break;
+                            }
+                        }
+                    }else{
+                        candidat = v;
+                    }
+                }
+            }if (candidat != null){
+                added.add(candidat);
+                Link lien = new Link(tmp, v);
+                graphe_elage.addNode(v);
+                graphe_elage.addLink(lien);
+                candidat = null;
+            }
+        }
+    }
+    int parcours_p (Node s, Node t, Node tmp){
+        int cpt = 0;
+        List<Node> voisins = tmp.getNeighbors();
+        for (Node v : voisins) {
+            if (v == t){
+                return 1;
+            }
+            cpt = cpt + parcours_p(s, t, v);
+        }
+        return cpt;
     }
 
+    int nb_chemin (Node s, Node t) {
+        int nb = 0;
+        Topology graphe_mod = elagage(s, t);
+        Node tmp = new Node();
+        List<Node> noeuds = graphe_mod.getNodes();
+        int taille = noeuds.size();
+        Node s_mod = noeuds.get(0);
+        Node t_mod = noeuds.get(taille-1);
+        nb = parcours_p(s_mod, t_mod, tmp);
+        return nb;
+    }
 
     @Override
     public void onMessage(Message message) {
