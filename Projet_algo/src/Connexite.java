@@ -32,28 +32,52 @@ public class Connexite extends Node{
         }
         return false;
     }
-    public boolean k_connexe(int k,Node s, Node t, List<Node> allNodes){
+    public List<List<Integer>> calcul_combinaisons(int p, int n){
+        List<List<Integer>> liste_combinaisons = new ArrayList<List<Integer>>();
+        List<Integer> indices = new ArrayList<Integer>();
+        liste_combinaisons.add(indices);
+
+        for(int i = 0; i < p; i++){
+            indices.add(i);
+        }
+        if(p == n){
+            return liste_combinaisons;
+        }
+        int i = p-1;
+
+        while (i != -1){
+            indices.set(i, indices.get(i) + 1);
+            for (int j = i+1; i < p; i++){
+                indices.set(j, indices.get(j-1) + 1);
+            }
+            if (indices.get(i) == n-p+i){
+                i--;
+            }else{
+                i = p-1;
+            }
+            liste_combinaisons.add(indices);
+        }
+        return liste_combinaisons;
+    }
+
+    public boolean k_connexe(int k, Node s, Node t, List<Node> allNodes){
         List<Node> interdit=new ArrayList<>();
-        for (Node node: allNodes) {
-            if (node!=s && node!=t){
-                interdit.add(node);
-                for (int i = 1; i < k; i++) {
-                    int n = 0;
-                    boolean stop =false;
-                    while (!stop){
-                        if (!interdit.contains(allNodes.get(n)) && allNodes.get(n)!=s && allNodes.get(n)!=t){
-                            interdit.add(allNodes.get(n));
-                            stop =true;
-                        }
-                        n+=1;
-                    }
+        List<List<Integer>> combinaisons = new ArrayList<List<Integer>>();
+        combinaisons = calcul_combinaisons(k, allNodes.size());
+        for(List<Integer> uplets : combinaisons){
+            for(Integer position : uplets){
+                if(allNodes.get(position) == s || allNodes.get(position) == t){
+                    break;
                 }
+                interdit.add(allNodes.get(position));
+            }
+            if(interdit.size() == 3){
                 boolean a = est_connexe_sans(s,t,interdit);
-                interdit.clear();
                 if (!a){
                     return false;
                 }
             }
+            interdit.clear();
         }
         return true;
     }
