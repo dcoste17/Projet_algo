@@ -33,8 +33,8 @@ public class Connexite extends Node{
         return false;
     }
     public List<List<Integer>> calcul_combinaisons(int p, int n){
-        List<List<Integer>> liste_combinaisons = new ArrayList<List<Integer>>();
-        List<Integer> indices = new ArrayList<Integer>();
+        List<List<Integer>> liste_combinaisons = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
         liste_combinaisons.add(indices);
 
         for(int i = 0; i < p; i++){
@@ -62,7 +62,7 @@ public class Connexite extends Node{
 
     public boolean k_connexe(int k, Node s, Node t, List<Node> allNodes){
         List<Node> interdit=new ArrayList<>();
-        List<List<Integer>> combinaisons = new ArrayList<List<Integer>>();
+        List<List<Integer>> combinaisons = new ArrayList<>();
         combinaisons = calcul_combinaisons(k, allNodes.size());
         for(List<Integer> uplets : combinaisons){
             for(Integer position : uplets){
