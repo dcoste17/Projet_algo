@@ -47,8 +47,10 @@ public class Connexite extends Node{
 
         while (i != -1){
             indices.set(i, indices.get(i) + 1);
-            for (int j = i+1; i < p; j++){
-                indices.set(j, indices.get(j-1) + 1);
+            if (i < p-1) {
+                for (int j = i + 1; i < p; j++) {
+                    indices.set(j, indices.get(j - 1) + 1);
+                }
             }
             if (indices.get(i) == n-p+i){
                 i--;
