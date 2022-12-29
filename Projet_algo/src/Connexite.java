@@ -35,11 +35,12 @@ public class Connexite extends Node{
     public List<List<Integer>> calcul_combinaisons(int p, int n){
         List<List<Integer>> liste_combinaisons = new ArrayList<>();
         List<Integer> indices = new ArrayList<>();
-        liste_combinaisons.add(indices);
 
         for(int i = 0; i < p; i++){
             indices.add(i);
         }
+        liste_combinaisons.add(indices);
+
         if(p == n){
             return liste_combinaisons;
         }
