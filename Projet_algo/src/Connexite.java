@@ -73,7 +73,7 @@ public class Connexite extends Node{
                 }
                 interdit.add(allNodes.get(position));
             }
-            if(interdit.size() == 3){
+            if(interdit.size() == k){
                 boolean a = est_connexe_sans(s,t,interdit);
                 if (!a){
                     return false;
