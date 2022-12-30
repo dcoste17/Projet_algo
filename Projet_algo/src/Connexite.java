@@ -95,7 +95,7 @@ public class Connexite extends Node{
             if (!a){
                 for (Node node_critic : indices){
                     if (!critiques.contains(node_critic)){
-                        critiques.add(node_critic);
+                        critiques.add(node_criticgit);
                     }
                 }
             }
