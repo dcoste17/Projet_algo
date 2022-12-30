@@ -32,58 +32,42 @@ public class Connexite extends Node{
         }
         return false;
     }
-    public List<List<Integer>> calcul_combinaisons(int p, int n){
-        List<List<Integer>> liste_combinaisons = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
+    public boolean calcul_combinaisons(int p, List<Node> n, Node s, Node t){
+        List<Node> indices = new ArrayList<>();
 
-        for(int i = 0; i < p; i++){
-            indices.add(i);
-        }
-        liste_combinaisons.add(indices);
+        for (Node node:n.subList(0,p))
+            indices.add(node);
 
-        if(p == n){
-            return liste_combinaisons;
-        }
         int i = p-1;
 
         while (i != -1){
-            indices.set(i, indices.get(i) + 1);
+            int indexi=n.indexOf(indices.get(i))+1;
+            Node node = n.get(indexi);
+            indices.set(i, node);
             if (i < p-1) {
-                for (int j = i + 1; i < p; j++) {
-                    indices.set(j, indices.get(j - 1) + 1);
+                for (int j = i + 1; j < p; j++) {
+                    indexi =n.indexOf(indices.get(j - 1)) + 1;
+                    node=n.get(indexi);
+                    indices.set(j, node);
                 }
             }
-            if (indices.get(i) == n-p+i){
+            if (indices.get(i).getID() == n.size()-p+i){
                 i--;
             }else{
                 i = p-1;
             }
-            liste_combinaisons.add(indices);
-        }
-        return liste_combinaisons;
-    }
 
-    public boolean k_connexe(int k, Node s, Node t, List<Node> allNodes){
-        List<Node> interdit=new ArrayList<>();
-        List<List<Integer>> combinaisons = new ArrayList<>();
-        combinaisons = calcul_combinaisons(k, allNodes.size());
-        for(List<Integer> uplets : combinaisons){
-            for(Integer position : uplets){
-                if(allNodes.get(position) == s || allNodes.get(position) == t){
-                    break;
-                }
-                interdit.add(allNodes.get(position));
+            boolean a = est_connexe_sans(s,t,indices);
+            if (!a){
+                return false;
             }
-            if(interdit.size() == k){
-                boolean a = est_connexe_sans(s,t,interdit);
-                if (!a){
-                    return false;
-                }
-            }
-            interdit.clear();
         }
+
         return true;
     }
+
+
+
 
     public Topology elagage(Node s, Node t) {
         Stack<Node> pile = new Stack<>();

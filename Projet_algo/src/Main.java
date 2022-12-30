@@ -90,14 +90,14 @@ public class Main implements SelectionListener, StartListener, CommandListener {
             int i =0;
             while (is_connexe){
                 i+=1;
-                is_connexe =c.k_connexe(i,sourceNode,targetNode,allNodes);
+                is_connexe =c.calcul_combinaisons(i,allNodes,sourceNode,targetNode);
 
             }
             System.out.println("i="+i);
 
         }
         if (command.equals(K_CONNEX)){
-           is_connexe =c.k_connexe(nb_interdit,sourceNode,targetNode,allNodes);
+           is_connexe =c.calcul_combinaisons(nb_interdit,allNodes,sourceNode,targetNode);
             System.out.println(is_connexe);
         }
 
