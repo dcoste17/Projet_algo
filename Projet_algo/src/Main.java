@@ -13,6 +13,7 @@ public class Main implements SelectionListener, StartListener, CommandListener {
     public static final String HAS_ONE_PATH = "There is one path";
     public static final String FIND_CONNEX = "Find Connexite";
     public static final String K_CONNEX = "It is k-Connexite";
+    public static final String CRITICAL_NODE = "Nodes who are critical";
     Topology tp;
     Node sourceNode;
     Node targetNode;
@@ -27,6 +28,7 @@ public class Main implements SelectionListener, StartListener, CommandListener {
         tp.addCommand(HAS_ONE_PATH);
         tp.addCommand(K_CONNEX);
         tp.addCommand(FIND_CONNEX);
+        tp.addCommand(CRITICAL_NODE);
         tp.addCommandListener(this);
         new JViewer(tp);
         tp.start();
@@ -77,6 +79,7 @@ public class Main implements SelectionListener, StartListener, CommandListener {
         Connexite c = new Connexite();
         allNodes= tp.getNodes();
         boolean is_connexe;
+        List<Node> noeuds_critiques = new ArrayList<>();
         int nb_interdit=interdit.size();
         if (command.equals(HAS_ONE_PATH)){
 
@@ -99,6 +102,12 @@ public class Main implements SelectionListener, StartListener, CommandListener {
         if (command.equals(K_CONNEX)){
            is_connexe =c.calcul_combinaisons(nb_interdit,allNodes,sourceNode,targetNode);
             System.out.println(is_connexe);
+        }
+        if (command.equals(CRITICAL_NODE)){
+            noeuds_critiques =c.noeuds_critiques(nb_interdit,allNodes,sourceNode,targetNode);
+            for(Node node : noeuds_critiques){
+                node.setColor(Color.red);
+            }
         }
 
     }

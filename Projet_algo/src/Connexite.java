@@ -66,7 +66,42 @@ public class Connexite extends Node{
         return true;
     }
 
+    public List<Node> noeuds_critiques(int p, List<Node> n, Node s, Node t){
+        List<Node> indices = new ArrayList<>();
+        List<Node> critiques = new ArrayList<>();
+        for (Node node:n.subList(0,p))
+            indices.add(node);
 
+        int i = p-1;
+
+        while (i != -1){
+            int indexi=n.indexOf(indices.get(i))+1;
+            Node node = n.get(indexi);
+            indices.set(i, node);
+            if (i < p-1) {
+                for (int j = i + 1; j < p; j++) {
+                    indexi =n.indexOf(indices.get(j - 1)) + 1;
+                    node=n.get(indexi);
+                    indices.set(j, node);
+                }
+            }
+            if (indices.get(i).getID() == n.size()-p+i){
+                i--;
+            }else{
+                i = p-1;
+            }
+
+            boolean a = est_connexe_sans(s,t,indices);
+            if (!a){
+                for (Node node_critic : indices){
+                    if (!critiques.contains(node_critic)){
+                        critiques.add(node_critic);
+                    }
+                }
+            }
+        }
+        return critiques;
+    }
 
 
     public Topology elagage(Node s, Node t) {
